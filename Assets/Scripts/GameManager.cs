@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     Quaternion initRotation;
 
     bool isInit = false;
-    int currentMarkerIndex = 0;
+    public int currentMarkerIndex = 0;
+    bool isFirstTime = true;
 
     void Start()
     {
@@ -42,9 +43,13 @@ public class GameManager : MonoBehaviour
 
                 if(angle < angleThreshold && !isInit)
                 {
-                    dolphinModel.gameObject.SetActive(true);
-                    initRotation = GetGyroRotation();
                     isInit = true;
+                    initRotation = GetGyroRotation();
+
+                    accessGoogleSheet.GetDolphinPosition(currentMarkerIndex, (position) => {
+                        dolphinModel.position = position;
+                        dolphinModel.gameObject.SetActive(true);
+                    });
                 }
             }
         }
@@ -52,12 +57,12 @@ public class GameManager : MonoBehaviour
 
     void OnSavePositionClick()
     {
-        accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position);
+        accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position, dolphinModel.rotation.eulerAngles.x);
     }
 
     void OnShootClick()
     {
-        accessGoogleSheet.SendIntSignal(1);
+        accessGoogleSheet.SendIOT();
     }
 
     void Update()
@@ -80,27 +85,18 @@ public class GameManager : MonoBehaviour
             targetRoot = markerRoots[0];
             currentMarkerIndex = 0;
             CurrentMarkerText.text = "面左";
-            accessGoogleSheet.GetDolphinPosition(0, (position) => {
-                dolphinModel.position = position;
-            });
         }
         else if(markerName == "面中")
         {
             targetRoot = markerRoots[1];
             currentMarkerIndex = 1;
             CurrentMarkerText.text = "面中";
-            accessGoogleSheet.GetDolphinPosition(1, (position) => {
-                dolphinModel.position = position;
-            });
         }
         else if(markerName == "面右")
         {
             targetRoot = markerRoots[2];
             currentMarkerIndex = 2;
             CurrentMarkerText.text = "面右";
-            accessGoogleSheet.GetDolphinPosition(2, (position) => {
-                dolphinModel.position = position;
-            });
         }
     }
 

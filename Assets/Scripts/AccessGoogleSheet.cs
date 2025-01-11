@@ -8,13 +8,13 @@ public class AccessGoogleSheet : MonoBehaviour
 {
     public string url = @"https://script.google.com/macros/s/AKfycbyWHZD4pck6ldbmmIvAkx2wxOJovGwGWrob1-id1sdGtoeHLJc6xJqxOOCXWWVonCBZKw/exec";
     public string url_param = "?id={0}";
-    public string url_post = "?id={0}&x={1}&y={2}&z={3}";
+    public string url_post = "?id={0}&x={1}&y={2}&z={3}&rx={4}";
     public GameObject OK_Message;
     public string IOTBaseUrl = "ylf2025.iottalk.tw/signal";
 
-    public void SetDolphinPosition(int id, Vector3 position)
+    public void SetDolphinPosition(int id, Vector3 position, float rx)
     {
-        StartCoroutine(SetDolphinPositionCoroutine(id, position));
+        StartCoroutine(SetDolphinPositionCoroutine(id, position, rx));
     }
 
     public void GetDolphinPosition(int id, Action<Vector3> callback)
@@ -22,10 +22,16 @@ public class AccessGoogleSheet : MonoBehaviour
         StartCoroutine(GetDolphinPositionCoroutine(id, callback));
     }
 
-    private IEnumerator SetDolphinPositionCoroutine(int id, Vector3 position)
+    public void SendIOT()
     {
-        Debug.Log(url + string.Format(url_post, id, position.x, position.y, position.z));
-        UnityWebRequest request = UnityWebRequest.Get(url + string.Format(url_post, id, position.x, position.y, position.z));
+        StartCoroutine(SendIOTCoroutine());
+    }
+
+    private IEnumerator SetDolphinPositionCoroutine(int id, Vector3 position, float rx)
+    {
+        string fullUrl = url + string.Format(url_post, id, position.x, position.y, position.z, rx);
+        Debug.Log("發送請求URL: " + fullUrl);
+        UnityWebRequest request = UnityWebRequest.Get(fullUrl);
         request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
         yield return request.SendWebRequest();
@@ -88,6 +94,37 @@ public class AccessGoogleSheet : MonoBehaviour
 
         callback(position);
     }
+
+    IEnumerator SendIOTCoroutine()
+    {
+        UnityWebRequest request = UnityWebRequest.Get(url + "?iot=1");
+        request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        yield return request.SendWebRequest();
+
+        try
+        {
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                string urlResponse = request.downloadHandler.text;
+                Debug.Log("Response: " + urlResponse);
+            }
+            else
+            {
+                Debug.LogError($"Error: {request.error}");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error: {e.Message}");
+        }
+        finally
+        {
+            request.Dispose();
+        }
+    }
+
+
 
     public void SendIntSignal(int signal)
     {

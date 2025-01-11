@@ -6,21 +6,28 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public Text CurrentMarkerText;
+    public Button BTN_SavePosition;
+    public Button BTN_Shoot;
     public Transform dolphinModel;
     public List<Transform> markerRoots;
     public Transform targetRoot;
     public float angleThreshold = 10;
 
     public Transform View3DBase;
+    public AccessGoogleSheet accessGoogleSheet;
     Quaternion initRotation;
 
     bool isInit = false;
+    int currentMarkerIndex = 0;
 
     void Start()
     {
         // 啟用陀螺儀
         Input.gyro.enabled = true;
         StartCoroutine(ShowPosition());
+        BTN_SavePosition.onClick.AddListener(OnSavePositionClick);
+        BTN_Shoot.onClick.AddListener(OnShootClick);
     }
 
     IEnumerator ShowPosition()
@@ -31,7 +38,7 @@ public class GameManager : MonoBehaviour
             if(targetRoot != null)
             {
                 float angle = GetAngleBetween(Vector3.zero, targetRoot.eulerAngles);    
-                Debug.Log($"Angle: {angle}");
+                //Debug.Log($"Angle: {angle}");
 
                 if(angle < angleThreshold && !isInit)
                 {
@@ -43,13 +50,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void OnSavePositionClick()
+    {
+        accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position);
+    }
+
+    void OnShootClick()
+    {
+        accessGoogleSheet.SendIntSignal(1);
+    }
+
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-           
-        }
-        
         if(isInit)  // 確保已經初始化
         {
             // 獲取當前陀螺儀旋轉
@@ -66,14 +78,29 @@ public class GameManager : MonoBehaviour
         if(markerName == "面左")
         {
             targetRoot = markerRoots[0];
+            currentMarkerIndex = 0;
+            CurrentMarkerText.text = "面左";
+            accessGoogleSheet.GetDolphinPosition(0, (position) => {
+                dolphinModel.position = position;
+            });
         }
         else if(markerName == "面中")
         {
             targetRoot = markerRoots[1];
+            currentMarkerIndex = 1;
+            CurrentMarkerText.text = "面中";
+            accessGoogleSheet.GetDolphinPosition(1, (position) => {
+                dolphinModel.position = position;
+            });
         }
         else if(markerName == "面右")
         {
             targetRoot = markerRoots[2];
+            currentMarkerIndex = 2;
+            CurrentMarkerText.text = "面右";
+            accessGoogleSheet.GetDolphinPosition(2, (position) => {
+                dolphinModel.position = position;
+            });
         }
     }
 

@@ -74,6 +74,7 @@ public class GameUI : MonoBehaviour
 
         if(index == 0){
             BTN_Shoot.gameObject.SetActive(true);
+            BTN_Shoot.interactable = true;
             WaitPanel.DOFade(0, 2f);
         }
     }

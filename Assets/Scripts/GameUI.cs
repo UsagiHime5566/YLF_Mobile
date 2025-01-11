@@ -68,14 +68,20 @@ public class GameUI : MonoBehaviour
         if(index == 1){
             nextCDTime_online = Time.time + cdTime_online;
             dolphinAnim.PlayTimeline();
-            WaitPanel.DOFade(1, 1f);
             BTN_Shoot.gameObject.SetActive(false);
+            StartCoroutine(DelayShowWaitPanel());
         }
 
         if(index == 0){
-            WaitPanel.DOFade(0, 2f);
             BTN_Shoot.gameObject.SetActive(true);
+            WaitPanel.DOFade(0, 2f);
         }
+    }
+
+    IEnumerator DelayShowWaitPanel()
+    {
+        yield return new WaitForSeconds(3f);
+        WaitPanel.DOFade(1, 1f);
     }
 
     IEnumerator CheckCDTime()

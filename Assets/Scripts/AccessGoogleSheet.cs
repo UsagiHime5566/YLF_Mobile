@@ -42,7 +42,7 @@ public class AccessGoogleSheet : MonoBehaviour
             {
                 string urlResponse = request.downloadHandler.text;
                 Debug.Log("Response: " + urlResponse);
-                OK_Message.SetActive(true);
+                if(OK_Message) OK_Message.SetActive(true);
             }
             else
             {
@@ -58,7 +58,7 @@ public class AccessGoogleSheet : MonoBehaviour
             request.Dispose();
         }
         yield return new WaitForSeconds(2);
-        OK_Message.SetActive(false);
+        if(OK_Message) OK_Message.SetActive(false);
     }
 
     public IEnumerator GetDolphinPositionCoroutine(int id, Action<Vector3> callback)

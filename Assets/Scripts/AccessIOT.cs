@@ -9,11 +9,13 @@ public class AccessIOT : MonoBehaviour
     private static extern void CallIOTSet();
 
     public int currentIOTIndex = -1;
+    public System.Action<int> OnIOTData;
 
     public void ReceiveIOTData(string message)
     {
         Debug.Log("從JS收到消息: " + message);
         currentIOTIndex = int.Parse(message);
+        OnIOTData?.Invoke(currentIOTIndex);
     }
 
     public void CallIOTSet_JavaScript()

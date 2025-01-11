@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("UI")]
     public Text CurrentMarkerText;
     public Button BTN_SavePosition;
     public Button BTN_Shoot;
+
+    [Header("Model")]
     public Transform dolphinModel;
     public List<Transform> markerRoots;
     public Transform targetRoot;
@@ -22,13 +25,15 @@ public class GameManager : MonoBehaviour
     bool isInit = false;
     public int currentMarkerIndex = 0;
 
+    public System.Action OnDolphinReady;
+
     void Start()
     {
         // 啟用陀螺儀
         Input.gyro.enabled = true;
         StartCoroutine(ShowPosition());
-        BTN_SavePosition.onClick.AddListener(OnSavePositionClick);
-        BTN_Shoot.onClick.AddListener(OnShootClick);
+        BTN_SavePosition?.onClick.AddListener(OnSavePositionClick);
+        BTN_Shoot?.onClick.AddListener(OnShootClick);
     }
 
     IEnumerator ShowPosition()
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
                     accessGoogleSheet.GetDolphinPosition(currentMarkerIndex, (position) => {
                         dolphinModel.position = position;
                         dolphinModel.gameObject.SetActive(true);
+                        OnDolphinReady?.Invoke();
                     });
                 }
             }
@@ -60,9 +66,12 @@ public class GameManager : MonoBehaviour
         accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position, dolphinModel.rotation.eulerAngles.x);
     }
 
-    void OnShootClick()
+    async void OnShootClick()
     {
+        BTN_Shoot.interactable = false;
         accessIOT.CallIOTSet_JavaScript();
+        await Task.Delay(3000);
+        BTN_Shoot.interactable = true;
     }
 
     void Update()
@@ -84,19 +93,19 @@ public class GameManager : MonoBehaviour
         {
             targetRoot = markerRoots[0];
             currentMarkerIndex = 0;
-            CurrentMarkerText.text = "面左";
+            if(CurrentMarkerText) CurrentMarkerText.text = "面左";
         }
         else if(markerName == "面中")
         {
             targetRoot = markerRoots[1];
             currentMarkerIndex = 1;
-            CurrentMarkerText.text = "面中";
+            if(CurrentMarkerText) CurrentMarkerText.text = "面中";
         }
         else if(markerName == "面右")
         {
             targetRoot = markerRoots[2];
             currentMarkerIndex = 2;
-            CurrentMarkerText.text = "面右";
+            if(CurrentMarkerText) CurrentMarkerText.text = "面右";
         }
     }
 

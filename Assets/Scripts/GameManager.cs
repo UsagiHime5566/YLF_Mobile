@@ -16,11 +16,11 @@ public class GameManager : MonoBehaviour
 
     public Transform View3DBase;
     public AccessGoogleSheet accessGoogleSheet;
+    public AccessIOT accessIOT;
     Quaternion initRotation;
 
     bool isInit = false;
     public int currentMarkerIndex = 0;
-    bool isFirstTime = true;
 
     void Start()
     {
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
 
     void OnShootClick()
     {
-        accessGoogleSheet.SendIOT();
+        accessIOT.CallIOTSet_JavaScript();
     }
 
     void Update()

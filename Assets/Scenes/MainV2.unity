@@ -265,6 +265,7 @@ MonoBehaviour:
   angleThreshold: 10
   View3DBase: {fileID: 450915965}
   accessGoogleSheet: {fileID: 608922435}
+  accessIOT: {fileID: 581484455}
   currentMarkerIndex: 5
 --- !u!4 &108597217
 Transform:
@@ -6803,6 +6804,51 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &581484454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 581484456}
+  - component: {fileID: 581484455}
+  m_Layer: 0
+  m_Name: AccessIOT
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &581484455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581484454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e311fb59ac0a8d148b3231c39f5e12aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentIOTIndex: -1
+--- !u!4 &581484456
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581484454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &604337621
 GameObject:
   m_ObjectHideFlags: 0
@@ -34149,5 +34195,6 @@ SceneRoots:
   - {fileID: 108597217}
   - {fileID: 311081051}
   - {fileID: 608922434}
+  - {fileID: 581484456}
   - {fileID: 1717493442}
   - {fileID: 450915965}

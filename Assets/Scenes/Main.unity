@@ -205,7 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timelineDirector: {fileID: 932424801}
   audioSource: {fileID: 47761555}
-  delayAnim: 0
+  delayAnim: 300
   isPlayOnStart: 0
 --- !u!4 &47761554
 Transform:

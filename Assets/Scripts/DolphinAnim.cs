@@ -25,12 +25,19 @@ public class DolphinAnim : MonoBehaviour
         timelineDirector.time = timelineDirector.duration;
     }
 
-    public async void PlayTimeline()
+    public void PlayTimeline()
     {
-        await Task.Delay(delayAnim);
+        StartCoroutine(PlayTimelineCoroutine());
+    }
+
+    private IEnumerator PlayTimelineCoroutine()
+    {
+        yield return new WaitForSeconds(delayAnim / 1000f);
         timelineDirector.Play();
         audioSource.Play();
     }
+
+    
 
     void Update() {
         if(Input.GetKeyDown(KeyCode.Space))

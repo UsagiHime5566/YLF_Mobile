@@ -66,11 +66,16 @@ public class GameManager : MonoBehaviour
         accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position, dolphinModel.rotation.eulerAngles.x);
     }
 
-    async void OnShootClick()
+    void OnShootClick()
     {
         BTN_Shoot.interactable = false;
         accessIOT.CallIOTSet_JavaScript();
-        await Task.Delay(3000);
+        StartCoroutine(EnableShootButton());
+    }
+
+    private IEnumerator EnableShootButton()
+    {
+        yield return new WaitForSeconds(3);
         BTN_Shoot.interactable = true;
     }
 

@@ -51,8 +51,10 @@ public class GameManager : MonoBehaviour
                     isInit = true;
                     initRotation = GetGyroRotation();
 
-                    accessGoogleSheet.GetDolphinPosition(currentMarkerIndex, (position) => {
-                        dolphinModel.position = position;
+                    accessGoogleSheet.GetDolphinPosition(currentMarkerIndex, (position, rx, scale) => {
+                        dolphinModel.localPosition = position;
+                        dolphinModel.localRotation = Quaternion.Euler(rx, 0, 0);
+                        dolphinModel.localScale = new Vector3(scale, scale, scale);
                         dolphinModel.gameObject.SetActive(true);
                         OnDolphinReady?.Invoke();
                     });
@@ -63,7 +65,7 @@ public class GameManager : MonoBehaviour
 
     void OnSavePositionClick()
     {
-        accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.position, dolphinModel.rotation.eulerAngles.x);
+        accessGoogleSheet.SetDolphinPosition(currentMarkerIndex, dolphinModel.localPosition, dolphinModel.localRotation.eulerAngles.x, dolphinModel.localScale.x);
     }
 
     void OnShootClick()

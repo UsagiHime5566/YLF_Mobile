@@ -6317,7 +6317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   url: https://script.google.com/macros/s/AKfycbyWHZD4pck6ldbmmIvAkx2wxOJovGwGWrob1-id1sdGtoeHLJc6xJqxOOCXWWVonCBZKw/exec
   url_param: ?id={0}
-  url_post: ?id={0}&x={1}&y={2}&z={3}&rx={4}
+  url_post: ?id={0}&x={1}&y={2}&z={3}&rx={4}&s={5}
   OK_Message: {fileID: 0}
   IOTBaseUrl: ylf2025.iottalk.tw/signal
 --- !u!1 &639203222

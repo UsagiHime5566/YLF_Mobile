@@ -8,16 +8,16 @@ public class AccessGoogleSheet : MonoBehaviour
 {
     public string url = @"https://script.google.com/macros/s/AKfycbyWHZD4pck6ldbmmIvAkx2wxOJovGwGWrob1-id1sdGtoeHLJc6xJqxOOCXWWVonCBZKw/exec";
     public string url_param = "?id={0}";
-    public string url_post = "?id={0}&x={1}&y={2}&z={3}&rx={4}";
+    public string url_post = "?id={0}&x={1}&y={2}&z={3}&rx={4}&s={5}";
     public GameObject OK_Message;
     public string IOTBaseUrl = "ylf2025.iottalk.tw/signal";
 
-    public void SetDolphinPosition(int id, Vector3 position, float rx)
+    public void SetDolphinPosition(int id, Vector3 position, float rx, float scale)
     {
-        StartCoroutine(SetDolphinPositionCoroutine(id, position, rx));
+        StartCoroutine(SetDolphinPositionCoroutine(id, position, rx, scale));
     }
 
-    public void GetDolphinPosition(int id, Action<Vector3> callback)
+    public void GetDolphinPosition(int id, Action<Vector3, float, float> callback)
     {
         StartCoroutine(GetDolphinPositionCoroutine(id, callback));
     }
@@ -27,9 +27,9 @@ public class AccessGoogleSheet : MonoBehaviour
         StartCoroutine(SendIOTCoroutine());
     }
 
-    private IEnumerator SetDolphinPositionCoroutine(int id, Vector3 position, float rx)
+    private IEnumerator SetDolphinPositionCoroutine(int id, Vector3 position, float rx, float scale)
     {
-        string fullUrl = url + string.Format(url_post, id, position.x, position.y, position.z, rx);
+        string fullUrl = url + string.Format(url_post, id, position.x, position.y, position.z, rx, scale);
         Debug.Log("發送請求URL: " + fullUrl);
         UnityWebRequest request = UnityWebRequest.Get(fullUrl);
         request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -61,7 +61,7 @@ public class AccessGoogleSheet : MonoBehaviour
         if(OK_Message) OK_Message.SetActive(false);
     }
 
-    public IEnumerator GetDolphinPositionCoroutine(int id, Action<Vector3> callback)
+    public IEnumerator GetDolphinPositionCoroutine(int id, Action<Vector3, float, float> callback)
     {
         UnityWebRequest request = UnityWebRequest.Get(url + string.Format(url_param, id));
         request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -69,6 +69,8 @@ public class AccessGoogleSheet : MonoBehaviour
         yield return request.SendWebRequest();
 
         Vector3 position = new Vector3(0, -2, 10);
+        float rx = 0;
+        float scale = 1;
         try
         {
             if (request.result == UnityWebRequest.Result.Success)
@@ -77,6 +79,8 @@ public class AccessGoogleSheet : MonoBehaviour
                 Debug.Log("Response: " + urlResponse);
                 string[] s = urlResponse.Split(',');
                 position = new Vector3(float.Parse(s[0]), float.Parse(s[1]), float.Parse(s[2]));
+                rx = float.Parse(s[3]);
+                scale = float.Parse(s[4]);
             }
             else
             {
@@ -92,7 +96,7 @@ public class AccessGoogleSheet : MonoBehaviour
             request.Dispose();
         }
 
-        callback(position);
+        callback(position, rx, scale);
     }
 
     IEnumerator SendIOTCoroutine()

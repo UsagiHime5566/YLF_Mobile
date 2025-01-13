@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
         while(true) 
         {
             yield return new WaitForSeconds(0.33f);
+            if(!Input.gyro.enabled) Input.gyro.enabled = true;
+            
             if(targetRoot != null)
             {
                 float angle = GetAngleBetween(Vector3.zero, targetRoot.eulerAngles);    

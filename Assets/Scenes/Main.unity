@@ -12607,7 +12607,7 @@ MonoBehaviour:
   gameManager: {fileID: 108597216}
   accessIOT: {fileID: 581484455}
   dolphinAnim: {fileID: 47761553}
-  cdTime_online: 90
+  cdTime_online: 120
 --- !u!4 &824687161
 Transform:
   m_ObjectHideFlags: 0
